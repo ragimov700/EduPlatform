@@ -4,9 +4,8 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     """
-    Кастомная модель пользователя.
+    Расширение базовой модели пользователя.
     """
-
     balance = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -14,9 +13,9 @@ class CustomUser(AbstractUser):
         verbose_name='баланс'
     )
 
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-
     def __str__(self):
         return self.username
+
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'

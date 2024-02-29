@@ -7,6 +7,5 @@ class CustomUserAdmin(admin.ModelAdmin):
     """
     Конфигурация админки для модели пользователя.
     """
-
     list_display = ('username', 'email', 'balance')
     search_fields = ('username', 'email')
