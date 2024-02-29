@@ -8,7 +8,6 @@ def set_initial_balance(sender, instance, created, **kwargs):
     """
     Сигнал для зачисления стартового баланса пользователю.
     """
-
     if created:
         instance.balance = 50.00
         instance.save()
