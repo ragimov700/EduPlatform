@@ -1,21 +1,38 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.db.models import Count
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from products.models import Product, UserProductAccess
 from .permissions import IsAuthorOrAdminOrReadOnly
-from .serializers import ProductSerializer, LessonSerializer
+from .serializers import (
+    ProductCreateSerializer,
+    LessonSerializer,
+    ProductReadSerializer
+)
 
 User = get_user_model()
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     http_method_names = ('get', 'post', 'patch', 'delete')
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
     permission_classes = (IsAuthorOrAdminOrReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return ProductReadSerializer
+        return ProductCreateSerializer
+
+    def get_queryset(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return Product.objects.annotate(
+                lessons_count=Count('lessons')
+            ).select_related(
+                'author'
+            ).all()
+        return Product.objects.all()
 
     @action(methods=['get'], detail=True)
     def purchase(self, request, pk):

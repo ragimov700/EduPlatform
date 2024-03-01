@@ -1,10 +1,18 @@
+from djoser.serializers import UserSerializer
 from rest_framework import serializers
 
 from products.models import Product, Group, UserProductAccess, Lesson
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    author = serializers.CurrentUserDefault()
+class ProductCreateSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для создания/изменения продуктов.
+    """
+    author = UserSerializer(default=serializers.CurrentUserDefault())
+    start_datetime = serializers.DateTimeField(
+        format="%d-%m-%YT%H:%M:%S",
+        input_formats=["%d-%m-%YT%H:%M"]
+    )
 
     class Meta:
         model = Product
@@ -20,18 +28,44 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для групп.
+    """
+
     class Meta:
         model = Group
         fields = '__all__'
 
 
 class UserProductAccessSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для доступов к продуктам.
+    """
+
     class Meta:
         model = UserProductAccess
         fields = '__all__'
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для уроков.
+    """
+
     class Meta:
         model = Lesson
         fields = '__all__'
+
+
+class ProductReadSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для просмотра продуктов.
+    """
+    author = UserSerializer()
+    lessons_count = serializers.IntegerField()
+    start_datetime = serializers.DateTimeField(format="%d-%m-%YT%H:%M:%S")
+
+    class Meta:
+        model = Product
+        fields = ('id', 'author', 'name',
+                  'start_datetime', 'price', 'lessons_count')
