@@ -36,11 +36,6 @@ class Product(models.Model):
         validators=[MinValueValidator(1)],
         verbose_name='максимальное кол-во студентов в группе'
     )
-    number_of_groups = models.IntegerField(
-        default=3,
-        validators=[MinValueValidator(1)],
-        verbose_name='кол-во групп'
-    )
 
     def clean(self):
         if self.min_users_in_group > self.max_users_in_group:
@@ -94,6 +89,7 @@ class Group(models.Model):
     students = models.ManyToManyField(User, verbose_name='студенты')
     product = models.ForeignKey(
         Product,
+        related_name='groups',
         on_delete=models.CASCADE,
         verbose_name='продукт'
     )
@@ -104,3 +100,24 @@ class Group(models.Model):
     class Meta:
         verbose_name = 'группа'
         verbose_name_plural = 'группы'
+
+
+class Lesson(models.Model):
+    """
+    Модель урока для продукта.
+    """
+    name = models.CharField(max_length=255, verbose_name='название')
+    video_url = models.URLField(verbose_name='ссылка')
+    product = models.ForeignKey(
+        Product,
+        related_name='lessons',
+        on_delete=models.CASCADE,
+        verbose_name='продукт'
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'урок'
+        verbose_name_plural = 'уроки'

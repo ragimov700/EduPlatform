@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from products.models import Product, Group, UserProductAccess
+from products.models import Product, Group, UserProductAccess, Lesson
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -28,4 +28,10 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserProductAccessSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProductAccess
+        fields = '__all__'
+
+
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
         fields = '__all__'
