@@ -17,6 +17,9 @@ User = get_user_model()
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для продуктов.
+    """
     http_method_names = ('get', 'post', 'patch', 'delete')
     permission_classes = (IsAuthorOrAdminOrReadOnly,)
 
@@ -84,7 +87,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         if not product.user_accesses.filter(user=user).exists():
             return Response(
-                {'detail': 'У вас нет доступа к этому продукту.'}
+                {'detail': 'У вас нет доступа к этому продукту.'},
+                status=status.HTTP_403_FORBIDDEN
             )
 
         serializer = LessonSerializer(product.lessons, many=True)
