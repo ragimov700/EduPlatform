@@ -37,7 +37,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             ).all()
         return Product.objects.all()
 
-    @action(methods=['get'], detail=True)
+    @action(methods=['post'], detail=True)
     def purchase(self, request, pk):
         """
         Метод для покупки продукта пользователем.
